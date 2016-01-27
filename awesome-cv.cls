@@ -77,6 +77,8 @@
 \RequirePackage{fontawesome}
 % Needed to deal a paragraphs
 \RequirePackage{parskip}
+% Dynamic creation of header
+\RequirePackage{tabularx}
 % Needed to deal hyperlink
 \RequirePackage[hidelinks]{hyperref}
 \hypersetup{%
@@ -388,10 +390,24 @@
 %-------------------------------------------------------------------------------
 %                Commands for elements of CV structure
 %-------------------------------------------------------------------------------
+
+\newcommand{\acvHeaderleft}{}
+\newcommand{\acvHeaderright}{}
+\newcommand{\setleftheader}[1]{\def\acvHeaderleft{#1}}
+\newcommand{\setrightheader}[1]{\def\acvHeaderright{#1}}
+% Leaves 1 em to the left and right of the normal content. If the
+% content really takes up the whole with, having a little indent
+% is good.
+\newcommand{\headerleftsep}{\hspace{1em}}
+\newcommand{\headerrightsep}{\hspace{1em}}
 % Define a header for CV
 % Usage: \makecvheader
+\renewcommand{\tabularxcolumn}[1]{b{#1}}
 \newcommand*{\makecvheader}{%
   \begin{center}
+	  \begin{tabularx}{\linewidth}{@{}l@{\headerleftsep}>{\centering}X@{\headerrightsep}r@{}}
+		  \acvHeaderleft
+		  &
     \headerfirstnamestyle{\@firstname}\headerlastnamestyle{{}\acvHeaderNameDelim\@lastname}%
     \\[\acvHeaderAfterNameSkip]%
     \ifthenelse{\isundefined{\@position}}{}{\headerpositionstyle{\@position\\[\acvHeaderAfterPositionSkip]}}%
@@ -489,6 +505,9 @@
     \ifthenelse{\isundefined{\@quote}}%
       {}%
       {\headerquotestyle{\@quote\\}\vspace{\acvHeaderAfterQuoteSkip}}%
+      &
+      \acvHeaderright
+      \end{tabularx}
   \end{center}%
 }
 
